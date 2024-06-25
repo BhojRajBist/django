@@ -1,0 +1,190 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Flood Risk Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map" style="height: 600px;"></div>
+
+    <script>
+        var map = L.map('map').setView([28, 84], 7); // Center map on Nepal
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        var imageUrl = "{{ raster_url }}",
+            imageBounds = [[26, 80], [31, 89]]; // Set the bounds to the extent of Nepal
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(map);
+    </script>
+</body>
+</html> -->
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flood Risk Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map" style="height: 600px;"></div>
+
+    <script>
+        var map = L.map('map').setView([28, 84], 7); // Center map on Nepal
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        var geoJsonUrl = "{{ vector_url }}"; // URL to the GeoJSON file
+
+        fetch(geoJsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                L.geoJson(data, {
+                    style: function (feature) {
+                        switch (feature.properties.classification) {
+                            case 'low': return { color: "green" };
+                            case 'medium': return { color: "orange" };
+                            case 'high': return { color: "red" };
+                        }
+                    }
+                }).addTo(map);
+            })
+            .catch(err => console.error(err));
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- This is frontend  with collepallet as per the GEE code -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flood Risk Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        #map {
+            height: 600px; /* Adjust height as needed */
+        }
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+        .legend-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="legend-container">
+        <h4>Legend</h4>
+        <div id="legend" class="legend"></div>
+        <div>
+            <strong>Min Value:</strong> <span id="min-value">{{ min_value }}</span><br>
+            <strong>Max Value:</strong> <span id="max-value">{{ max_value }}</span>
+        </div>
+    </div>
+
+    <script>
+        var map = L.map('map').setView([28, 84], 7); // Center map on Nepal
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        var geoJsonUrl = "{{ vector_url }}"; // URL to the GeoJSON file
+
+        // Define the color palette and legend labels
+        var legendItems = [
+            { color: '#0000FF', label: 'न्यून डुबान' },   // Blue
+            { color: '#FFA500', label: 'मध्यम डुबान' }, // Orange
+            { color: '#FF0000', label: 'उच्च डुबान' },   // Red
+            { color: '#FF007F', label: 'अति उच्च डुबान' } // Pink
+        ];
+
+        fetch(geoJsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                L.geoJson(data, {
+                    style: function (feature) {
+                        return {
+                            fillColor: getColor(feature.properties.classification),
+                            weight: 1,
+                            opacity: 1,
+                            color: 'white',
+                            fillOpacity: 0.7
+                        };
+                    }
+                }).addTo(map);
+
+                // Function to replace the legend panel
+                function replaceLegendPanel(legendItems) {
+                    var legend = document.getElementById('legend');
+                    legend.innerHTML = ''; // Clear previous legend
+
+                    legendItems.forEach(item => {
+                        var div = document.createElement('div');
+                        div.innerHTML = '<i style="background:' + item.color + '"></i>' + item.label;
+                        legend.appendChild(div);
+                    });
+                }
+
+                // Initial call to replace the legend panel
+                replaceLegendPanel(legendItems);
+            })
+            .catch(err => console.error(err));
+
+        // Function to get color based on classification
+        function getColor(classification) {
+            switch (classification) {
+                case 'shallow':
+                    return '#0000FF'; // Blue
+                case 'moderate':
+                    return '#FFA500'; // Orange
+                case 'deep':
+                    return '#FF0000'; // Red
+                case 'very high':
+                    return '#FF007F'; // Pink
+                default:
+                    return '#808080'; // Gray (fallback)
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
