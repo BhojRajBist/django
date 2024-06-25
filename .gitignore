@@ -1,0 +1,45 @@
+# Ignore the virtual environment directory
+myenv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+*.env
+
+# If your virtualenv is within the project
+myenv/
+ENV/
+env.bak/
+env/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Local configuration files
+*.local
+
+# Django migrations
+**/migrations/*
+
+# Ignore static and media files
+staticfiles/
+media/
+
+# Node modules
+node_modules/
+
+# macOS files
+.DS_Store
