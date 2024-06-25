@@ -17,10 +17,10 @@ db.sqlite3
 *.env
 
 # If your virtualenv is within the project
-myenv/
-ENV/
-env.bak/
-env/
+# myenv/
+# ENV/
+# env.bak/
+# env/
 
 # VS Code
 .vscode/
