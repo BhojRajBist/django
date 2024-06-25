@@ -1,0 +1,1 @@
+web: gunicorn few.wsgi --log-file -
